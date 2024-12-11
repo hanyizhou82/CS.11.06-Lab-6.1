@@ -10,6 +10,10 @@ public class AdventureTime {
      */
     public static void main(String[] args) throws IOException {
 
+        System.out.println(challengeOne("inputOneTwo.txt"));
+        System.out.println(challengeTwo("inputOneTwo.txt"));
+        System.out.println(challengeThree("inputThreeFour.txt"));
+        System.out.println(challengeFour("inputThreeFour.txt"));
 
     }
 
@@ -22,7 +26,15 @@ public class AdventureTime {
      * @throws IOException
      */
     public static int challengeOne(String fileName) throws IOException {
-        return 0;
+
+        int[] depth = readFile(fileName);
+        int count =0;
+        for (int i = 1; i<depth.length; i++) {
+            if (depth[i]>depth[i - 1]) {
+                count++;
+            }
+        }
+        return count;
     }
 
     /** TODO 2
@@ -34,7 +46,17 @@ public class AdventureTime {
      * @throws FileNotFoundException
      */
     public static int challengeTwo(String fileName) throws FileNotFoundException {
-        return 0;
+
+        int[] depth = new int[countLinesInFile(fileName)];
+        depth = readFile(fileName);
+        int counter = 0;
+        for(int i = 1; i<depth.length-2; i++){
+            if(depth[i+2] >depth[i-1]){ // (simplified)
+                counter++;
+            }
+        }
+        return counter;
+
     }
 
     /** TODO 3
@@ -46,8 +68,24 @@ public class AdventureTime {
      * @throws FileNotFoundException
      */
     public static int challengeThree(String fileName) throws FileNotFoundException {
-        return 0;
-    }
+
+        String[] array = readFileStr(fileName);
+        int x = 0;
+        int y = 0;
+        for(int i = 0; i < array.length; i++){
+            String currentInstruction = array[i];
+            String[] splitInstructions = currentInstruction.split(" ");
+
+            if(splitInstructions[0].equals("forward")){
+                x += Integer.parseInt(splitInstructions[1]);
+            }
+            else if(splitInstructions[0].equals("down")){
+                y += Integer.parseInt(splitInstructions[1]);
+            }
+            else{
+                y -= Integer.parseInt(splitInstructions[1]);
+            }
+        }
 
     /** TODO 4
      *
@@ -58,7 +96,25 @@ public class AdventureTime {
      * @throws FileNotFoundException
      */
     public static int challengeFour(String filename) throws FileNotFoundException {
-        return 0;
+            String[] myArray = readFileStr(filename);
+            int horizontal = 0;
+            int deep = 0;
+            int goal = 0;
+            for(int i=0;i<myArray.length;i++){
+                String[] otherArray = myArray[i].split("");
+                if(otherArray[0].equals("forward ")){
+                    int d = Integer.parseInt(otherArray[1])*goal;
+                    horizontal+=Integer.parseInt(otherArray[1]);
+                    deep+=d;
+                }
+                if(otherArray[0].equals("down ")){
+                    goal+=Integer.parseInt(otherArray[1]);
+                }
+                if(otherArray[0].equals("up ")){
+                    goal-=Integer.parseInt(otherArray[1]);
+                }
+            }
+            return deep*horizontal;
     }
 
     /** This method will write the values passed as challengeOne, challengeTwo, challengeThree, and challengeFour to a text file.
@@ -90,6 +146,18 @@ public class AdventureTime {
         return data;
     }
 
+    private static String[] readFileStr(String inputFilename) throws FileNotFoundException {
+            File file = new File(inputFilename);
+            Scanner scanner = new Scanner(file);
+            int numberOfLinesInFile = countLinesInFile(inputFilename);
+            String [] data = new String[numberOfLinesInFile];
+            int index = 0;
+            while (scanner.hasNextLine()) {
+                data[index++] = scanner.nextLine();
+            }
+            scanner.close();
+            return data;
+        }
     /** This method will count the number of lines in a text file, which it will return.
      * Do not edit this method.
      */
